@@ -1,0 +1,43 @@
+{
+  "name": "aip-parsers",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Independent TypeScript implementation of Google's AIP-160 filtering and AIP-132 order_by: parser, checker, printer and evaluator.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "pnpm@10.12.1",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./filter": {
+      "types": "./dist/filter/index.d.ts",
+      "import": "./dist/filter/index.js"
+    },
+    "./order-by": {
+      "types": "./dist/order-by/index.d.ts",
+      "import": "./dist/order-by/index.js"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsdown --config-loader native",
+    "size": "node scripts/size.mjs",
+    "check": "pnpm typecheck && pnpm test && pnpm build"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsdown": "^0.23.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.3"
+  }
+}
