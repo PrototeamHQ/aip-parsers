@@ -8,8 +8,6 @@ This is an **independent implementation** of Google's AIP specifications. It is 
 
 ## Install
 
-The package is private for now. Once published:
-
 ```sh
 pnpm add aip-parsers
 ```
