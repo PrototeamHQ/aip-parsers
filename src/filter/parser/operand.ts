@@ -45,7 +45,8 @@ export const parseOperand = (c: Cursor): Operand => {
       next(c)
       next(c)
       const raw = `-${number.text}`
-      return { kind: 'number', value: Number(raw), raw, span: joinSpans(token.span, number.span) }
+      // Number('-0x10') is NaN, so negate the parsed value instead of parsing `raw`.
+      return { kind: 'number', value: -Number(number.text), raw, span: joinSpans(token.span, number.span) }
     }
     case 'text': {
       const boolean = token.text === 'true' || token.text === 'false'
