@@ -43,7 +43,7 @@ printFilter(ast)
 evaluateFilter(ast, { status: 'paid', total: 250, customer: { vip: false } }) // true
 ```
 
-`parseFilter` never throws. It always returns every error found and a best-effort tree (`ok: false` with `ast` set), so editors can keep highlighting while the user types. `parseFilterOrThrow` throws `FilterSyntaxError` instead.
+`parseFilter` never throws: it returns every error found plus a best-effort tree (`ok: false` with `ast` set). `parseFilterOrThrow` throws `FilterSyntaxError` instead.
 
 ## AST reference
 
@@ -65,11 +65,11 @@ Expressions (`Expr`):
 
 Operands (`Operand`): `member` (`path: string[]`), `string`, `number` (`value` plus exact `raw` text), `boolean`, `duration` (`amount`, `unit`), `timestamp`, `call`, and `binary` (`+`/`-`, only with the arithmetic extension).
 
-A `member` is a dotted path of text. Whether it is a field, a search term or a plain value depends on where it appears: on the left of a comparator it is a field; on the right (`status = paid`) it is a value; alone it is a global restriction. After `checkFilter`, field members carry `field: { name, spec }` and aliases are replaced by the real name.
+A `member` is a dotted path: a field on the left of a comparator, a value on the right (`status = paid`), and a global restriction alone. After `checkFilter`, field members carry `field: { name, spec }` and aliases are replaced by the real name.
 
 ## Function registry and `checkFilter`
 
-The parser accepts any well-formed `name(args)` call. Consumers declare the functions they support as plain data, together with the field types of the resource:
+The parser accepts any `name(args)` call. Declare the resource's fields and supported functions as plain data:
 
 ```ts
 const schema: Schema = {
@@ -90,7 +90,7 @@ const schema: Schema = {
 }
 ```
 
-`checkFilter(ast, schema)` returns `{ ok: true, ast }` or `{ ok: false, errors }` with every problem found. It verifies that:
+`checkFilter(ast, schema)` returns `{ ok: true, ast }` or `{ ok: false, errors }`. It verifies that:
 
 - fields exist (aliases resolve), are not `filterable: false`, and paths traverse only `message`, `map` and `any` fields;
 - values match the field type (enum values, integers, timestamps, durations, booleans), quoted strings being converted as AIP-160 describes;
@@ -103,7 +103,7 @@ Error codes: `unknown-field`, `not-filterable`, `invalid-traversal`, `unknown-fu
 
 ## Evaluator
 
-`evaluateFilter(ast, record, { functions, search })` runs a filter against plain JavaScript values, so the library is complete without a database. Pass a checked AST to let field types decide how quoted values convert; an unchecked AST works too, inferring from the values.
+`evaluateFilter(ast, record, { functions, search })` runs a filter against plain JavaScript values. Pass a checked AST to let field types decide how quoted values convert; an unchecked AST infers from the values.
 
 - Numbers compare exactly: plain decimals, `bigint` and numeric strings are compared as decimals, not doubles.
 - Timestamps come from `Date` objects or RFC-3339 strings and compare at millisecond precision, across offsets. Durations are numbers of seconds or `{ seconds }`.
@@ -156,8 +156,8 @@ Minified and compressed, each entry point with its shared code (`pnpm size`):
 
 | Entry | Minified | Gzip | Brotli |
 | --- | --- | --- | --- |
-| `.` (both) | 28.0 kB | 10.1 kB | 9.1 kB |
-| `/filter` | 25.4 kB | 9.2 kB | 8.3 kB |
+| `.` (both) | 28.8 kB | 10.3 kB | 9.3 kB |
+| `/filter` | 26.1 kB | 9.4 kB | 8.5 kB |
 | `/order-by` | 3.1 kB | 1.5 kB | 1.3 kB |
 
 `sideEffects: false`; both entries tree-shake.
@@ -169,5 +169,7 @@ pnpm install
 pnpm check   # typecheck, test, build
 pnpm size
 ```
+
+Built with Claude Code; the code has not yet been extensively reviewed by humans.
 
 Licensed under Apache-2.0.
