@@ -166,6 +166,7 @@ describe('functions', () => {
 
   it('field parameters receive every value at the path', () => {
     expect(holds('regex(items.sku, "^B")', { items: [{ sku: 'A1' }, { sku: 'B2' }] })).toBe(true)
+    expect(checkedHolds('regex(tags, "^b$")', { tags: ['a', 'b'] })).toBe(true)
   })
 
   it('fail fast when a function has no implementation', () => {

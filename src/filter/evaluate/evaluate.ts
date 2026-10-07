@@ -33,7 +33,7 @@ const callValue = (call: Call, ctx: Context): unknown => {
   if (!fn?.evaluate) throw new Error(`Function "${call.name}" has no evaluate implementation`)
   const args = call.args.map((arg, i) => {
     const param = fn.params[i] ?? fn.rest
-    if (arg.kind === 'member' && param?.type === 'field') return resolvePath(ctx.record, arg.path)
+    if (arg.kind === 'member' && param?.type === 'field') return elements(resolvePath(ctx.record, arg.path))
     return isOperand(arg) ? operandValue(arg, ctx) : evaluateExpr(arg, ctx)
   })
   return fn.evaluate(...args)
