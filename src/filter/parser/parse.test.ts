@@ -68,6 +68,10 @@ describe('literals', () => {
     expect(tree('a = 9007199254740993')).toBe('(= a 9007199254740993)')
   })
 
+  it('negative hex numbers keep their value', () => {
+    expect(parse('a = -0x10')).toMatchObject({ right: { kind: 'number', value: -16, raw: '-0x10' } })
+  })
+
   it('true and false are only literals on their own', () => {
     expect(tree('a = true.x')).toBe('(= a true.x)')
   })

@@ -15,10 +15,7 @@ const tokenize = (source: string) => {
   return tokens
 }
 
-/**
- * Parses an AIP-132 order_by: comma-separated fields, each with an optional `desc` suffix
- * (`asc` is accepted too). Whitespace is insignificant. Reports every error found.
- */
+/** Accepts `asc` as well as the spec's `desc` suffix. Reports every error found. */
 export const parseOrderBy = (source: string): OrderByParse => {
   const tokens = tokenize(source)
   const errors: OrderByError[] = []

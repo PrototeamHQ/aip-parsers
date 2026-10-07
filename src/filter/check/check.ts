@@ -16,7 +16,6 @@ const ordered: ValueType[] = ['string', 'integer', 'number', 'timestamp', 'durat
 
 type Subject = { node: Operand; type: ValueType | undefined; spec: FieldSpec | undefined }
 
-// The left side of a restriction: a field reference, a function call or a literal.
 const checkSubject = (ctx: CheckContext, node: Operand): Subject | undefined => {
   if (node.kind === 'member') {
     const resolved = resolveMember(ctx, node)
@@ -106,9 +105,8 @@ const checkExpr = (ctx: CheckContext, node: Expr): Expr | undefined => {
 }
 
 /**
- * Validates a parsed filter against a schema: fields exist and are filterable, values match
- * field types, operators suit the type and calls match the registry. Returns the tree with
- * members resolved (`member.field`) and aliases canonicalised, or every error found.
+ * Returns the tree with members resolved (`member.field`) and aliases canonicalised, or every
+ * error found.
  */
 export const checkFilter = (ast: Expr, schema: Schema): CheckResult => {
   const ctx: CheckContext = { schema, errors: [] }

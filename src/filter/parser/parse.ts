@@ -6,7 +6,7 @@ import type { ParseOptions } from '../options'
 import { next, peek, type Cursor } from './cursor'
 import { parseExpression } from './expression'
 
-/** Always carries every error found plus the best-effort tree, so editors keep working. */
+/** Always carries every error found plus the best-effort tree. */
 export type FilterParse =
   | { ok: true; ast: Expr | undefined; errors: [] }
   | { ok: false; ast: Expr | undefined; errors: FilterError[] }
@@ -46,7 +46,7 @@ export const parseFilter = (source: string, options: ParseOptions = {}): FilterP
   return errors.length === 0 ? { ok: true, ast, errors: [] } : { ok: false, ast, errors }
 }
 
-/** Convenience for callers that prefer exceptions. Returns undefined for an empty filter. */
+/** Returns undefined for an empty filter. */
 export const parseFilterOrThrow = (source: string, options?: ParseOptions) => {
   const result = parseFilter(source, options)
   if (!result.ok) throw new FilterSyntaxError(result.errors)

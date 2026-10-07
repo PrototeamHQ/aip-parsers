@@ -1,5 +1,5 @@
 import type { CompareOp } from '../ast'
-import { decimalOf, Decimal } from './decimal'
+import { decimalOf, Decimal, doubleOf } from './decimal'
 import { globMatch } from './glob'
 import { isDuration, millisOf, secondsOf } from './values'
 
@@ -26,8 +26,8 @@ const numbers = (actual: unknown, expected: unknown) => {
   const a = decimalOf(actual)
   const b = decimalOf(expected)
   if (a && b) return a.compare(b)
-  const x = typeof actual === 'number' ? actual : a?.toNumber()
-  const y = typeof expected === 'number' ? expected : b?.toNumber()
+  const x = doubleOf(actual)
+  const y = doubleOf(expected)
   return x === undefined || y === undefined || Number.isNaN(x) || Number.isNaN(y) ? undefined : order(x, y)
 }
 

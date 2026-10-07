@@ -27,6 +27,7 @@ export const resolveMember = (ctx: CheckContext, member: Member): Member | undef
   }
   const path = [found.name]
   let spec = found.spec
+  let filterable = spec.filterable !== false
   for (const segment of member.path.slice(1)) {
     const inner = spec.type === 'message' ? spec.fields?.[segment] : spec.type === 'map' ? spec.value : spec.type === 'any' ? spec : undefined
     if (!inner || (spec.type === 'message' && !Object.hasOwn(spec.fields ?? {}, segment))) {
@@ -37,8 +38,9 @@ export const resolveMember = (ctx: CheckContext, member: Member): Member | undef
     }
     path.push(segment)
     spec = inner
+    filterable &&= spec.filterable !== false
   }
-  if (found.spec.filterable === false || spec.filterable === false) {
+  if (!filterable) {
     ctx.errors.push(diagnostic('not-filterable', `Field "${path.join('.')}" cannot be filtered on`, 'Mark it filterable in the schema', member.span))
     return undefined
   }

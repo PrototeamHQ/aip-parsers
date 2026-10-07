@@ -27,6 +27,17 @@ export const parseDecimal = (text: string) => {
   return new Decimal(BigInt(`${match[1]}${match[2]}${fraction}`), fraction.length)
 }
 
+const numericText = /^-?(?:\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|0[xX][0-9a-fA-F]+)$/
+
+/** Double value of a number, decimal or numeric text, including exponent and hex forms. */
+export const doubleOf = (value: unknown) => {
+  if (typeof value === 'number') return value
+  if (typeof value === 'bigint') return Number(value)
+  if (value instanceof Decimal) return value.toNumber()
+  if (typeof value !== 'string' || !numericText.test(value)) return undefined
+  return value.startsWith('-') ? -Number(value.slice(1)) : Number(value)
+}
+
 export const decimalOf = (value: unknown) => {
   if (typeof value === 'bigint') return new Decimal(value, 0)
   if (typeof value === 'number') return Number.isFinite(value) ? parseDecimal(String(value)) : undefined

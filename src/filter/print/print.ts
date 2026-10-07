@@ -18,7 +18,6 @@ const literal = (node: Literal) => {
 
 const isNegative = (node: Operand) => node.kind === 'number' && node.raw.startsWith('-')
 
-/** Prints an operand. */
 export const printOperand = (node: Operand): string => {
   switch (node.kind) {
     case 'member':
@@ -55,8 +54,8 @@ const grouped = (parent: Expr['kind'], node: Expr) => {
 }
 
 /**
- * Canonical text for an expression: AND/OR/NOT keywords (never "-"), quoted strings with
- * escapes, and parentheses around every OR, AND or sequence nested inside another group.
+ * Canonical text: AND/OR/NOT keywords (never "-"), double-quoted strings, and parentheses
+ * around every OR, AND or sequence nested inside another group.
  */
 export const printFilter = (node: Expr): string => {
   switch (node.kind) {

@@ -36,6 +36,14 @@ describe('comparison semantics', () => {
     expect(holds('n > 5', { n: 'text' })).toBe(false)
   })
 
+  it('negative hex and quoted exponent or hex numbers', () => {
+    expect(holds('n = -0x10', { n: -16 })).toBe(true)
+    expect(holds('n = "1e3"', { n: 1000 })).toBe(true)
+    expect(checkedHolds('price = "1e3"', { price: 1000 })).toBe(true)
+    expect(checkedHolds('id = "0x10"', { id: 16 })).toBe(true)
+    expect(checkedHolds('id = "-0x10"', { id: -16 })).toBe(true)
+  })
+
   it('booleans', () => {
     expect(holds('a = true', { a: true })).toBe(true)
     expect(holds('a = true', { a: 'true' })).toBe(true)
@@ -158,6 +166,7 @@ describe('functions', () => {
 
   it('field parameters receive every value at the path', () => {
     expect(holds('regex(items.sku, "^B")', { items: [{ sku: 'A1' }, { sku: 'B2' }] })).toBe(true)
+    expect(checkedHolds('regex(tags, "^b$")', { tags: ['a', 'b'] })).toBe(true)
   })
 
   it('fail fast when a function has no implementation', () => {
