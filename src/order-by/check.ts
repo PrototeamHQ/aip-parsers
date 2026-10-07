@@ -25,6 +25,7 @@ export const checkOrderBy = (items: OrderByItem[], schema: SortSchema): OrderByC
     }
     const path = [found.name]
     let field = found.field
+    let sortable = field.sortable !== false
     let failed = false
     for (const segment of item.path.slice(1)) {
       const inner = field.fields ? find(field.fields, segment)?.field : field.value
@@ -35,9 +36,10 @@ export const checkOrderBy = (items: OrderByItem[], schema: SortSchema): OrderByC
       }
       path.push(field.fields ? find(field.fields, segment)!.name : segment)
       field = inner
+      sortable &&= field.sortable !== false
     }
     if (failed) continue
-    if (found.field.sortable === false || field.sortable === false) {
+    if (!sortable) {
       errors.push(diagnostic('not-sortable', `Field "${path.join('.')}" cannot be sorted on`, 'Mark it sortable in the schema', item.span))
       continue
     }

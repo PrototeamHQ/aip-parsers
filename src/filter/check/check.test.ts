@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { errorsOf as parseErrors, parse } from '../../../test/support/helpers'
 import { schema } from '../../../test/support/schema'
+import type { Schema } from '../schema'
 import { checkFilter } from './check'
 
 const options = { extensions: { arithmetic: true, durationUnits: true } }
@@ -31,6 +32,11 @@ describe('fields', () => {
   it('rejects fields that are not filterable', () => {
     rejects('notes = "x"', 'not-filterable')
     rejects('author.secret = "x"', 'not-filterable')
+  })
+
+  it('rejects subfields of a message that is not filterable', () => {
+    const hidden: Schema = { fields: { outer: { type: 'message', fields: { hidden: { type: 'message', filterable: false, fields: { x: { type: 'string' } } } } } } }
+    expect(checkFilter(parse('outer.hidden.x = "a"'), hidden)).toMatchObject({ ok: false, errors: [{ code: 'not-filterable' }] })
   })
 
   it('traverses messages, maps and any', () => {

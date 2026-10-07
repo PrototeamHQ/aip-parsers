@@ -64,4 +64,10 @@ describe('AIP-132 order_by', () => {
     expect(result.ok ? '' : result.errors[2]!.hint).toBe('Did you mean "id"?')
     expect(checkOrderBy(items('constructor'), sortSchema).ok).toBe(false)
   })
+
+  it('subfields of a field that is not sortable are rejected', () => {
+    const sortSchema = { fields: { nested: { fields: { hidden: { sortable: false, fields: { leaf: {} } } } } } }
+    const result = checkOrderBy(items('nested.hidden.leaf'), sortSchema)
+    expect(result.ok ? [] : result.errors.map((e) => e.code)).toEqual(['not-sortable'])
+  })
 })
