@@ -36,6 +36,14 @@ describe('comparison semantics', () => {
     expect(holds('n > 5', { n: 'text' })).toBe(false)
   })
 
+  it('negative hex and quoted exponent or hex numbers', () => {
+    expect(holds('n = -0x10', { n: -16 })).toBe(true)
+    expect(holds('n = "1e3"', { n: 1000 })).toBe(true)
+    expect(checkedHolds('price = "1e3"', { price: 1000 })).toBe(true)
+    expect(checkedHolds('id = "0x10"', { id: 16 })).toBe(true)
+    expect(checkedHolds('id = "-0x10"', { id: -16 })).toBe(true)
+  })
+
   it('booleans', () => {
     expect(holds('a = true', { a: true })).toBe(true)
     expect(holds('a = true', { a: 'true' })).toBe(true)
