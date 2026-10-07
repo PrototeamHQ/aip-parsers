@@ -11,7 +11,7 @@ const hexDigits = (source: string, from: number, length: number) => {
   return text.length === length && /^[0-9a-fA-F]+$/.test(text) ? parseInt(text, 16) : undefined
 }
 
-// Decodes the escape at `at` (the backslash). Returns the text and the offset after it.
+// `at` is the backslash; `end` is the offset after the escape.
 const escape = (source: string, at: number): { text: string; end: number } | { error: string; end: number } => {
   const char = source[at + 1]
   if (char === undefined) return { error: 'a backslash at the end', end: at + 1 }
@@ -28,7 +28,6 @@ const escape = (source: string, at: number): { text: string; end: number } | { e
   return { error: `the escape "\\${char}"`, end: at + 2 }
 }
 
-/** Scans a single- or double-quoted string starting at the opening quote. */
 export const scanString = (source: string, start: number) => {
   const quote = source[start]
   const errors: FilterError[] = []

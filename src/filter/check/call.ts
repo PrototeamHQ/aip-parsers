@@ -13,7 +13,6 @@ export type OperandChecker = (ctx: CheckContext, node: Operand) => CheckedOperan
 const isOperandArg = (arg: Arg): arg is Operand =>
   ['member', 'string', 'number', 'boolean', 'duration', 'timestamp', 'call', 'binary'].includes(arg.kind)
 
-// Checks one argument against its parameter; returns the (possibly resolved) argument.
 const checkArg = (ctx: CheckContext, param: ParamSpec, arg: Arg, checkOperand: OperandChecker): Arg | undefined => {
   if (!isOperandArg(arg)) {
     ctx.errors.push(diagnostic('wrong-argument', `Argument "${param.name}" must be a value`, 'Pass a field, literal or function call', arg.span))

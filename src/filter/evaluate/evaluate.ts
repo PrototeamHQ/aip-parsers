@@ -53,7 +53,6 @@ const operandValue = (node: Operand, ctx: Context): unknown => {
   }
 }
 
-// The values a restriction's left side refers to: those at a field path, or a computed value.
 const candidates = (node: Operand, ctx: Context) =>
   node.kind === 'member' ? resolvePath(ctx.record, node.path) : [operandValue(node, ctx)]
 
@@ -114,7 +113,7 @@ const evaluateExpr = (node: Expr, ctx: Context): boolean => {
 }
 
 /**
- * Evaluates a (preferably checked) filter against a plain JavaScript record.
+ * Pass a checked filter so field types decide how quoted values convert.
  * Throws when a called function has no `evaluate` implementation.
  */
 export const evaluateFilter = (ast: Expr, record: unknown, options: EvaluateOptions = {}) =>

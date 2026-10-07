@@ -8,10 +8,7 @@ const find = (fields: Record<string, SortField>, name: string) => {
   return alias && { name: alias[0], field: alias[1] }
 }
 
-/**
- * Validates order_by items against sortable fields, following nested fields, and replaces
- * aliases with the real field names. Fields are sortable unless marked `sortable: false`.
- */
+/** Replaces aliases with the real field names. Fields are sortable unless `sortable: false`. */
 export const checkOrderBy = (items: OrderByItem[], schema: SortSchema): OrderByCheck => {
   const errors: OrderByError[] = []
   const checked: OrderByItem[] = []

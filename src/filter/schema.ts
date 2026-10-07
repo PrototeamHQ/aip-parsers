@@ -2,7 +2,6 @@ export type ValueType =
   | 'string' | 'integer' | 'number' | 'boolean' | 'timestamp' | 'duration'
   | 'enum' | 'map' | 'message' | 'any'
 
-/** Plain-data description of a filterable field. */
 export type FieldSpec = {
   type: ValueType
   /** A repeated field matches when any element matches; use `:` to test membership. */
@@ -31,9 +30,6 @@ export type ParamSpec = {
 }
 
 /**
- * A function consumers declare. The parser accepts any well-formed call; `check` validates
- * calls against these signatures and `evaluate` runs `evaluate`.
- *
  * At evaluation, `field` parameters receive the array of values found at the field path
  * (several when the path crosses repeated fields); other parameters receive plain JS values:
  * strings, numbers, booleans, `Date` for timestamps, `{ seconds }` for durations.
