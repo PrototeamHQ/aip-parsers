@@ -5,6 +5,7 @@ on:
     branches: [main]
   push:
     branches: [main]
+  workflow_dispatch: # A merge with GITHUB_TOKEN starts no push run; ai-review.yml starts this one instead.
 
 jobs:
   check:
